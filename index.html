@@ -2038,9 +2038,16 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 .shutter { background: #3a3d43; }
 .face { background: #1b1c1f; }
 .stick { background: #2a2b2e; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+#formStatus:empty { display: none; }
 </style>
 </head>
 <body>
+<script>
+  /* PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (it ends in /exec).
+     While this is empty, the form opens the visitor's email app instead. */
+  window.FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxKDINzuHSJprJ3VOHpMMtiWtnJGjtFZcbBfGKNgQguErUClUTqlRullyxQrY9nV_7W/exec';
+</script>
 
 <!-- Industrial Topbar Dispatch Bar -->
 <header class="topbar">
@@ -2392,6 +2399,8 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
             <textarea id="fMessage" name="message" rows="4" placeholder="Tell me a bit about the schedule, venue, expected attendance, and what you need documented..."></textarea>
           </div>
 
+          <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+
           <div class="form-submit-row">
             <div class="form-submit-actions">
               <button type="submit" class="btn fill">Transmit Dispatch ↗</button>
@@ -2401,6 +2410,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
               Direct transmission via secure email client. Zero tracking scripts or spam harvesters.
             </p>
           </div>
+          <p class="form-note" id="formStatus" role="status" aria-live="polite"></p>
           <div id="toastMsg" class="toast-msg">✓ Assignment brief copied to clipboard! You can paste directly into any email.</div>
         </form>
       </div>
@@ -3351,9 +3361,37 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
   });
 
   // Form handling (opens pre-filled email to avoid exposing raw address to scrapers)
+  const FORM_MSG = {
+    sending: 'Sending…',
+    sent: '✓ Thank you! Your inquiry is sent and I will reply soon.',
+    failed: 'Something went wrong. Please email oliloken@gmail.com or call +47 98 45 75 47.',
+    slow: 'Please wait a moment and try again.',
+    note: 'Your message goes to my inbox and a private Google Sheet, and is only used to reply to you.'
+  };
+  const formStart = Date.now();
+  { const n = document.querySelector('#inquiryForm .form-note'); if (window.FORM_ENDPOINT && n) n.textContent = FORM_MSG.note; }
+
+  async function sendInquiry(f) {
+    const btn = f.querySelector('button[type="submit"]'), st = $('#formStatus');
+    if (f.website && f.website.value) return;                       /* spam trap: real people never fill it */
+    if (Date.now() - formStart < 3000) { st.textContent = FORM_MSG.slow; return; }
+    btn.disabled = true; st.textContent = FORM_MSG.sending;
+    const data = new URLSearchParams({
+      name: f.name.value.trim(), email: f.email.value.trim(), type: f.type.value,
+      date: f.date.value.trim(), message: f.message.value.trim(), lang: document.documentElement.lang
+    });
+    try {
+      await fetch(window.FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data });
+      st.textContent = FORM_MSG.sent; f.reset();
+    } catch (err) {
+      st.textContent = FORM_MSG.failed;
+    } finally { btn.disabled = false; }
+  }
+
   window.handleInquiry = function(e) {
     e.preventDefault();
     const f = e.target;
+    if (window.FORM_ENDPOINT) { sendInquiry(f); return; }
     const name = encodeURIComponent(f.name.value.trim());
     const email = encodeURIComponent(f.email.value.trim());
     const type = encodeURIComponent(f.type.value);
