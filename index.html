@@ -599,13 +599,14 @@ body.zoomed .hud { position: fixed; inset: 16px; z-index: 95; }
 }
 .ticker-track {
   display: inline-flex;
-  animation: tickerSlide 35s linear infinite;
+  animation: tickerSlide 70s linear infinite;
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.ticker-group { display: inline-flex; flex-shrink: 0; }
 .ticker-item {
   display: inline-flex;
   align-items: center;
@@ -617,7 +618,7 @@ body.zoomed .hud { position: fixed; inset: 16px; z-index: 95; }
 }
 @keyframes tickerSlide {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-25%); }
 }
 
 /* ==========================================================================
@@ -2040,6 +2041,23 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 .stick { background: #2a2b2e; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 #formStatus:empty { display: none; }
+
+/* ---- how it works ---- */
+.process { margin-top: clamp(28px, 4vw, 48px); }
+.process-label { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 14px; }
+.process-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 3vw, 36px); }
+.process-strip > div { border-top: 1.5px solid var(--ink); padding-top: 16px; }
+.process-num { font-family: var(--mono); font-weight: 700; font-size: 13px; color: var(--acc); }
+.process-strip h4 { font-size: clamp(18px, 2vw, 22px); font-weight: 800; letter-spacing: -.03em; margin: 6px 0 6px; }
+.process-strip p { font-size: 14.5px; line-height: 1.55; color: var(--ink-secondary); }
+/* ---- phone number that stands out ---- */
+.phone-big { display: block; background: var(--ink); color: var(--paper-light); padding: 18px 20px 16px; margin-bottom: 16px; border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 var(--acc); transition: transform .15s, box-shadow .15s; }
+.phone-big:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--acc); }
+.phone-label { display: block; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tape); }
+.phone-number { display: block; margin-top: 4px; font-size: clamp(30px, 4.6vw, 48px); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; white-space: nowrap; }
+.mail-line { display: block; width: fit-content; margin: 0 0 18px; font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--ink); border-bottom: 2px solid var(--acc); }
+.mail-line:hover { color: var(--acc); }
+@media (max-width: 760px) { .process-strip { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -2081,27 +2099,27 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
       <div class="hero-grid">
         <div class="hero-left">
           <div class="hero-dispatch-stamp">
-            <span>FOTOGRAF I STAVANGER-REGIONEN</span>
+            <span>FOTOGRAF I STAVANGER</span>
             <span>·</span>
             <strong>● LEDIG 2026/2027</strong>
           </div>
           <h1 class="hero-title">
-            UFORSTILT<br>
-            STEMNING.<br>
-            <span class="accent-slash">DISKRET</span><br>
-            NÆRVÆR.
+            DU MERKER<br>
+            MEG IKKE.<br>
+            <span class="accent-slash">DU SER</span><br>
+            BILDENE.
           </h1>
           <p class="hero-lead-text">
-            Jeg dokumenterer energiske toppmøter, bedriftskonferanser og tilgjengelige lederportretter over hele Norge. Selvstendig, teknisk sterk og rolig under press.
+            Jeg er Oliver, event- og portrettfotograf i Stavanger. Jeg dekker konferanser, firmaarrangementer og teamportretter, holder meg unna mens ting skjer, og sender deg de beste bildene innen 48 timer.
           </p>
           <div class="hero-actions-cluster">
-            <a class="btn fill" href="#work">Se bildearkivet (104) ↓</a>
-            <a class="btn outline" href="#inquiry">Send forespørsel ↗</a>
-            <button class="btn amber" id="heroCamBtn">Kameralab (3D) ⚡</button>
+            <a class="btn fill" href="#work" id="heroArchiveBtn">Se arbeidene ↓</a>
+            <a class="btn outline" href="#inquiry">Spør om en dato ↗</a>
+            <button class="btn amber" id="heroCamBtn">Prøv kameraet ⚡</button>
           </div>
           <div class="hero-technical-specs">
             <span>FLUE PÅ VEGGEN</span>
-            <span>BAKGRUNN I KUNST OG MEDISINSK TEKNOLOGI</span>
+            <span>TEAM- OG LEDERPORTRETTER</span>
             <span>HØYDEPUNKTER PÅ 48 TIMER</span>
           </div>
         </div>
@@ -2140,16 +2158,50 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
   <!-- Continuous Running Marquee Tape -->
   <aside class="ticker-band" aria-hidden="true">
     <div class="ticker-track">
-      <div class="ticker-item">KONFERANSER OG TOPPMØTER <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">DISKRET DOKUMENTASJON <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">LEDERPORTRETTER <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">MEDISINSK TEKNOLOGI OG INGENIØRFAG I BUNN <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">SELVSTENDIG FOTOGRAF <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">STAVANGER // ROGALAND // HELE LANDET <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">KONFERANSER OG TOPPMØTER <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">DISKRET DOKUMENTASJON <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">LEDERPORTRETTER <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">MEDISINSK TEKNOLOGI OG INGENIØRFAG I BUNN <span class="ticker-dot">■</span></div>
+      <div class="ticker-group">
+        <div class="ticker-item">KONFERANSER OG TOPPMØTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM- OG LEDERPORTRETTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HØYDEPUNKTER PÅ 48 TIMER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLUE PÅ VEGGEN <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FIRMAARRANGEMENTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">LEDIG 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // HELE LANDET <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROLIG UNDER PRESS <span class="ticker-dot">■</span></div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">KONFERANSER OG TOPPMØTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM- OG LEDERPORTRETTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HØYDEPUNKTER PÅ 48 TIMER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLUE PÅ VEGGEN <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FIRMAARRANGEMENTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">LEDIG 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // HELE LANDET <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROLIG UNDER PRESS <span class="ticker-dot">■</span></div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">KONFERANSER OG TOPPMØTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM- OG LEDERPORTRETTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HØYDEPUNKTER PÅ 48 TIMER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLUE PÅ VEGGEN <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FIRMAARRANGEMENTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">LEDIG 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // HELE LANDET <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROLIG UNDER PRESS <span class="ticker-dot">■</span></div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">KONFERANSER OG TOPPMØTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM- OG LEDERPORTRETTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HØYDEPUNKTER PÅ 48 TIMER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLUE PÅ VEGGEN <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FIRMAARRANGEMENTER <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">LEDIG 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // HELE LANDET <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROLIG UNDER PRESS <span class="ticker-dot">■</span></div>
+      </div>
     </div>
   </aside>
 
@@ -2185,7 +2237,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     <div class="wrap">
       <div class="sec-head">
         <div>
-          <span class="sec-kicker">// 02 OM FOTOGRAFEN</span>
+          <span class="sec-kicker">// 02 OM MEG</span>
           <h2 class="sec-title">Bak linsen</h2>
         </div>
       </div>
@@ -2244,7 +2296,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
               </div>
               <div class="spec-row">
                 <dt class="spec-label">UTSTYR</dt>
-                <dd class="spec-val">Sony fullformat og lyssterke fastobjektiver (35 mm / 85 mm) for dårlig lys</dd>
+                <dd class="spec-val">Sony fullformat</dd>
               </div>
               <div class="spec-row">
                 <dt class="spec-label">LEVERINGSTID</dt>
@@ -2269,7 +2321,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
       <div class="sec-head">
         <div>
           <span class="sec-kicker">// 03 TJENESTER</span>
-          <h2 class="sec-title">Oppdrag og tjenester</h2>
+          <h2 class="sec-title">Hva jeg gjør</h2>
         </div>
       </div>
 
@@ -2278,15 +2330,15 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         <article class="ledger-row">
           <div class="ledger-num">01</div>
           <div class="ledger-main">
-            <h3>Konferanser og toppmøter</h3>
+            <h3>Konferanser og firmaarrangementer</h3>
             <p>
-              Keynote-talere, publikumsenergi, paneldebatter og uforstilt nettverksbygging, dokumentert mens det skjer og uten å forstyrre rommet.
+              Jeg jobber stille i utkanten av rommet og fanger talerne, reaksjonene og samtalene mellom slagene. Når dere trenger gruppebilder, tar jeg styringen.
             </p>
           </div>
           <div class="ledger-specs">
-            <span>Høydepunkter levert innen 48 timer til sosiale medier og PR</span>
-            <span>Spesialist på scenelys og dårlige lysforhold</span>
-            <span>Digitalt arkiv i full oppløsning</span>
+            <span>Høydepunkter innen 48 timer, klare for sosiale medier og presse</span>
+            <span>Vant med mørke saler og scenelys</span>
+            <span>Hele galleriet i full oppløsning etterpå</span>
           </div>
         </article>
 
@@ -2294,15 +2346,15 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         <article class="ledger-row">
           <div class="ledger-num">02</div>
           <div class="ledger-main">
-            <h3>Leder- og teamportretter</h3>
+            <h3>Team- og lederportretter</h3>
             <p>
-              Rene, tilgjengelige portretter av gründere, keynote-talere og bedriftsteam. Tatt på lokasjon eller på kontoret deres.
+              Avslappede portretter av gründere, talere og team, på kontoret eller på lokasjon. Jeg guider underveis, så ingen trenger å kunne posere.
             </p>
           </div>
           <div class="ledger-specs">
-            <span>Naturlig lys eller bærbart studioblitsoppsett</span>
-            <span>Rolig og trygg veiledning foran kamera</span>
-            <span>Håndretusjerte bilder i høy oppløsning for nett og trykk</span>
+            <span>Naturlig lys, eller et lite bærbart blitsoppsett</span>
+            <span>Rolig og tydelig veiledning foran kamera</span>
+            <span>Retusjerte filer for nett og trykk</span>
           </div>
         </article>
 
@@ -2310,17 +2362,25 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         <article class="ledger-row">
           <div class="ledger-num">03</div>
           <div class="ledger-main">
-            <h3>Næringsliv og arbeidsplasskultur</h3>
+            <h3>Bedrift og arbeidsplass</h3>
             <p>
-              Ekte bilder til bedriftsnettsider, årsrapporter, rekrutteringskampanjer og prosjektmilepæler som viser reelt samarbeid.
+              Ærlige bilder av hvordan folkene deres faktisk jobber, til nettsider, årsrapporter, rekruttering og prosjektmilepæler.
             </p>
           </div>
           <div class="ledger-specs">
-            <span>Dokumentasjon av lokaler, laboratorier og drift</span>
-            <span>Full bruksrett til markedsføring og presse</span>
-            <span>Utvalgte bilder levert som en sammenhengende historie</span>
+            <span>Lokaler, laboratorier og daglig drift</span>
+            <span>Rett til å bruke bildene i markedsføring og presse</span>
+            <span>Et utvalg fortalt som en historie, ikke en haug med filer</span>
           </div>
         </article>
+      </div>
+      <div class="process">
+        <div class="process-label">Slik går det til</div>
+        <div class="process-strip">
+          <div><span class="process-num">1</span><h4>Fortell meg om dagen</h4><p>Dato, sted og hva du trenger. En kort melding holder.</p></div>
+          <div><span class="process-num">2</span><h4>Jeg svarer med et tilbud</h4><p>Jeg kommer raskt tilbake med ledige datoer og en pris.</p></div>
+          <div><span class="process-num">3</span><h4>Du får bildene</h4><p>Høydepunkter innen 48 timer, deretter hele galleriet.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -2335,15 +2395,17 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
           <span class="sec-kicker">// 04 KONTAKT OG TILGJENGELIGHET</span>
           <h2>La oss snakke om arrangementet ditt.</h2>
           <p>
-            Enten du arrangerer et heldags toppmøte, trenger nye teamportretter eller har et eget prosjekt i tankene: fyll ut skjemaet, så svarer jeg raskt med ledige datoer og et tilpasset tilbud. Jeg bygger porteføljen min akkurat nå, så vilkårene er fleksible.
+            Planlegger du en konferanse, et firmaarrangement eller teamportretter? Fortell meg hva som skal skje, så kommer jeg tilbake med ledige datoer og et tilbud. Jeg bygger porteføljen min akkurat nå, så vilkårene er fleksible.
           </p>
 
           <div class="dispatch-channels-card">
-            <small>Direkte kontakt</small>
+            <a class="phone-big" href="tel:+4798457547">
+              <span class="phone-label">Ring eller send melding</span>
+              <span class="phone-number">+47 98 45 75 47</span>
+            </a>
+            <a class="mail-line" href="mailto:oliloken@gmail.com">oliloken@gmail.com</a>
+            <small>Du finner meg også her</small>
             <div class="dispatch-links">
-              <a href="tel:+4798457547">
-                <span>[TEL]</span> Telefon: +47 98 45 75 47 ↗
-              </a>
               <a href="https://www.instagram.com/oliver.w.l/" target="_blank" rel="noreferrer">
                 <span>[IG]</span> Instagram: @oliver.w.l ↗
               </a>
@@ -2359,7 +2421,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 
         <form class="dispatch-form" id="inquiryForm" onsubmit="handleInquiry(event)">
           <div class="dispatch-form-header">
-            <span>FORESPØRSEL OM OPPDRAG</span>
+            <span>FORESPØRSEL</span>
             <span>ROGALAND</span>
           </div>
 
@@ -2714,11 +2776,11 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         </p>
       </div>
       <div class="fcol">
-        <strong>Innhold</strong>
+        <strong>Sider</strong>
         <a href="#work">[01] Utvalgte arbeider</a>
         <a href="#about">[02] Bak linsen</a>
-        <a href="#services">[03] Oppdrag og tjenester</a>
-        <a href="#inquiry">[04] Send forespørsel</a>
+        <a href="#services">[03] Hva jeg gjør</a>
+        <a href="#inquiry">[04] Ta kontakt</a>
         <a href="#studio">[05] 3D-kameralab</a>
       </div>
       <div class="fcol">
@@ -3062,6 +3124,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 
   /* If a preset photo is missing, swap in a real photo from the gallery instead of showing a blank card */
   async function resolveHero() {
+    { const b = $('#heroArchiveBtn'); if (b && all.length && !/\(\d+\)/.test(b.textContent)) b.textContent = b.textContent.replace(' ↓', ' (' + all.length + ') ↓'); }
     const ok = await Promise.all(HERO_PRESETS.map(pr => new Promise(r => {
       const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = pr.src;
     })));

@@ -599,13 +599,14 @@ body.zoomed .hud { position: fixed; inset: 16px; z-index: 95; }
 }
 .ticker-track {
   display: inline-flex;
-  animation: tickerSlide 35s linear infinite;
+  animation: tickerSlide 70s linear infinite;
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.ticker-group { display: inline-flex; flex-shrink: 0; }
 .ticker-item {
   display: inline-flex;
   align-items: center;
@@ -617,7 +618,7 @@ body.zoomed .hud { position: fixed; inset: 16px; z-index: 95; }
 }
 @keyframes tickerSlide {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-25%); }
 }
 
 /* ==========================================================================
@@ -2040,6 +2041,23 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 .stick { background: #2a2b2e; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 #formStatus:empty { display: none; }
+
+/* ---- how it works ---- */
+.process { margin-top: clamp(28px, 4vw, 48px); }
+.process-label { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 14px; }
+.process-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 3vw, 36px); }
+.process-strip > div { border-top: 1.5px solid var(--ink); padding-top: 16px; }
+.process-num { font-family: var(--mono); font-weight: 700; font-size: 13px; color: var(--acc); }
+.process-strip h4 { font-size: clamp(18px, 2vw, 22px); font-weight: 800; letter-spacing: -.03em; margin: 6px 0 6px; }
+.process-strip p { font-size: 14.5px; line-height: 1.55; color: var(--ink-secondary); }
+/* ---- phone number that stands out ---- */
+.phone-big { display: block; background: var(--ink); color: var(--paper-light); padding: 18px 20px 16px; margin-bottom: 16px; border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 var(--acc); transition: transform .15s, box-shadow .15s; }
+.phone-big:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--acc); }
+.phone-label { display: block; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tape); }
+.phone-number { display: block; margin-top: 4px; font-size: clamp(30px, 4.6vw, 48px); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; white-space: nowrap; }
+.mail-line { display: block; width: fit-content; margin: 0 0 18px; font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--ink); border-bottom: 2px solid var(--acc); }
+.mail-line:hover { color: var(--acc); }
+@media (max-width: 760px) { .process-strip { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -2053,9 +2071,9 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
   </div>
   <nav class="topnav" aria-label="Main sections">
     <a href="#work">[01] WORK</a>
-    <a href="#about">[02] DOSSIER</a>
-    <a href="#services">[03] LEDGER</a>
-    <a href="#inquiry">[04] DISPATCH</a>
+    <a href="#about">[02] ABOUT</a>
+    <a href="#services">[03] SERVICES</a>
+    <a href="#inquiry">[04] CONTACT</a>
     <a href="#studio">[05] CAMERA</a>
   </nav>
   <div class="nav-actions">
@@ -2081,27 +2099,27 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
       <div class="hero-grid">
         <div class="hero-left">
           <div class="hero-dispatch-stamp">
-            <span>STAVANGER REGION FIELD UNIT</span>
+            <span>PHOTOGRAPHER IN STAVANGER</span>
             <span>·</span>
             <strong>● AVAILABLE 2026/2027</strong>
           </div>
           <h1 class="hero-title">
-            CANDID<br>
-            ATMOSPHERE.<br>
-            <span class="accent-slash">UNOBTRUSIVE</span><br>
-            PRESENCE.
+            YOU WON'T<br>
+            NOTICE ME.<br>
+            <span class="accent-slash">YOU'LL SEE</span><br>
+            THE PICTURES.
           </h1>
           <p class="hero-lead-text">
-            Documenting high-energy summits, corporate conferences, and approachable executive portraits across Norway. Independent, technically grounded, and calm under pressure.
+            I'm Oliver, an event and portrait photographer in Stavanger. I cover conferences, company events and team portraits, stay out of the way while things happen, and send you the best frames within 48 hours.
           </p>
           <div class="hero-actions-cluster">
-            <a class="btn fill" href="#work">Explore Archive (104) ↓</a>
-            <a class="btn outline" href="#inquiry">Dispatch Brief ↗</a>
-            <button class="btn amber" id="heroCamBtn">Gear Lab (3D) ⚡</button>
+            <a class="btn fill" href="#work" id="heroArchiveBtn">See the work ↓</a>
+            <a class="btn outline" href="#inquiry">Ask about a date ↗</a>
+            <button class="btn amber" id="heroCamBtn">Try the camera ⚡</button>
           </div>
           <div class="hero-technical-specs">
             <span>FLY-ON-THE-WALL OBSERVER</span>
-            <span>ART & MEDICAL TECH BACKGROUND</span>
+            <span>TEAM & EXECUTIVE PORTRAITS</span>
             <span>48H HIGHLIGHTS</span>
           </div>
         </div>
@@ -2140,16 +2158,50 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
   <!-- Continuous Running Marquee Tape -->
   <aside class="ticker-band" aria-hidden="true">
     <div class="ticker-track">
-      <div class="ticker-item">CONFERENCES & SUMMITS <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">FLY ON THE WALL DOCUMENTATION <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">EXECUTIVE PORTRAITURE <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">GROUNDED IN MEDICAL TECH & ENGINEERING <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">INDEPENDENT OPERATOR <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">STAVANGER // ROGALAND // NATIONWIDE <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">CONFERENCES & SUMMITS <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">FLY ON THE WALL DOCUMENTATION <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">EXECUTIVE PORTRAITURE <span class="ticker-dot">■</span></div>
-      <div class="ticker-item">GROUNDED IN MEDICAL TECH & ENGINEERING <span class="ticker-dot">■</span></div>
+      <div class="ticker-group">
+        <div class="ticker-item">CONFERENCES & SUMMITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM & EXECUTIVE PORTRAITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HIGHLIGHTS IN 48 HOURS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLY ON THE WALL <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">COMPANY EVENTS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">AVAILABLE 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // NATIONWIDE <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">CALM UNDER PRESSURE <span class="ticker-dot">■</span></div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">CONFERENCES & SUMMITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM & EXECUTIVE PORTRAITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HIGHLIGHTS IN 48 HOURS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLY ON THE WALL <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">COMPANY EVENTS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">AVAILABLE 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // NATIONWIDE <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">CALM UNDER PRESSURE <span class="ticker-dot">■</span></div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">CONFERENCES & SUMMITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM & EXECUTIVE PORTRAITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HIGHLIGHTS IN 48 HOURS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLY ON THE WALL <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">COMPANY EVENTS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">AVAILABLE 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // NATIONWIDE <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">CALM UNDER PRESSURE <span class="ticker-dot">■</span></div>
+      </div>
+      <div class="ticker-group">
+        <div class="ticker-item">CONFERENCES & SUMMITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">TEAM & EXECUTIVE PORTRAITS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">HIGHLIGHTS IN 48 HOURS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">STAVANGER // SANDNES // FORUS // SOLA <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">FLY ON THE WALL <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">COMPANY EVENTS <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">AVAILABLE 2026/27 <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">ROGALAND // NATIONWIDE <span class="ticker-dot">■</span></div>
+        <div class="ticker-item">CALM UNDER PRESSURE <span class="ticker-dot">■</span></div>
+      </div>
     </div>
   </aside>
 
@@ -2185,7 +2237,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     <div class="wrap">
       <div class="sec-head">
         <div>
-          <span class="sec-kicker">// 02 OPERATOR DOSSIER</span>
+          <span class="sec-kicker">// 02 ABOUT ME</span>
           <h2 class="sec-title">Behind The Lens</h2>
         </div>
       </div>
@@ -2244,7 +2296,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
               </div>
               <div class="spec-row">
                 <dt class="spec-label">OPTICS & CAMERA</dt>
-                <dd class="spec-val">Sony Full-Frame + Fast Primes (35mm / 85mm), low-light glass</dd>
+                <dd class="spec-val">Sony Full-Frame</dd>
               </div>
               <div class="spec-row">
                 <dt class="spec-label">TURNAROUND</dt>
@@ -2268,8 +2320,8 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     <div class="wrap">
       <div class="sec-head">
         <div>
-          <span class="sec-kicker">// 03 CORE CAPABILITIES</span>
-          <h2 class="sec-title">Assignment Ledger</h2>
+          <span class="sec-kicker">// 03 SERVICES</span>
+          <h2 class="sec-title">What I do</h2>
         </div>
       </div>
 
@@ -2278,15 +2330,15 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         <article class="ledger-row">
           <div class="ledger-num">01</div>
           <div class="ledger-main">
-            <h3>Conferences & Summits</h3>
+            <h3>Conferences & company events</h3>
             <p>
-              Keynote speakers, audience energy, panel discussions, and unposed networking documented as they happen naturally without interrupting the room.
+              I work quietly from the edge of the room, catching speakers, reactions and the conversations in between. When you need group photos, I take charge.
             </p>
           </div>
           <div class="ledger-specs">
-            <span>48h expedited highlight package for social & PR</span>
-            <span>Low-light stage lighting specialists</span>
-            <span>Full-resolution master digital archive</span>
+            <span>Highlights within 48 hours, ready for social media and press</span>
+            <span>Used to dark halls and stage lighting</span>
+            <span>The full gallery in full resolution afterwards</span>
           </div>
         </article>
 
@@ -2294,15 +2346,15 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         <article class="ledger-row">
           <div class="ledger-num">02</div>
           <div class="ledger-main">
-            <h3>Executive & Team Portraits</h3>
+            <h3>Team & leader portraits</h3>
             <p>
-              Clean, approachable portraits for founders, keynote speakers, and corporate teams. Captured on-location or inside your office workspace.
+              Relaxed portraits of founders, speakers and teams, at your office or on location. I guide you through it, so nobody needs to know how to pose.
             </p>
           </div>
           <div class="ledger-specs">
-            <span>Natural light or portable studio flash setups</span>
-            <span>Calm, reassuring posing direction</span>
-            <span>Hand-retouched high-resolution web & print masters</span>
+            <span>Natural light, or a small portable flash setup</span>
+            <span>Calm, clear guidance in front of the camera</span>
+            <span>Retouched files for web and print</span>
           </div>
         </article>
 
@@ -2310,17 +2362,25 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         <article class="ledger-row">
           <div class="ledger-num">03</div>
           <div class="ledger-main">
-            <h3>Commercial & Workplace Culture</h3>
+            <h3>Company & workplace</h3>
             <p>
-              Grounded imagery for company websites, annual reports, recruitment campaigns, and project milestones that showcase authentic collaboration.
+              Honest pictures of how your people actually work, for websites, annual reports, recruiting and project milestones.
             </p>
           </div>
           <div class="ledger-specs">
-            <span>Facility, lab, and operational documentation</span>
-            <span>Full commercial marketing & press usage rights</span>
-            <span>Curated narrative story delivery</span>
+            <span>Premises, labs and day-to-day operations</span>
+            <span>Rights to use the pictures in marketing and press</span>
+            <span>A selection told as a story, not a pile of files</span>
           </div>
         </article>
+      </div>
+      <div class="process">
+        <div class="process-label">How it works</div>
+        <div class="process-strip">
+          <div><span class="process-num">1</span><h4>Tell me about the day</h4><p>Date, place and what you need. A short message is enough.</p></div>
+          <div><span class="process-num">2</span><h4>I reply with a quote</h4><p>I come back promptly with availability and a price.</p></div>
+          <div><span class="process-num">3</span><h4>You get the pictures</h4><p>Highlights within 48 hours, then the full gallery.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -2332,18 +2392,20 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     <div class="wrap">
       <div class="dispatch-box">
         <div class="dispatch-info">
-          <span class="sec-kicker">// 04 DISPATCH & AVAILABILITY</span>
+          <span class="sec-kicker">// 04 CONTACT & AVAILABILITY</span>
           <h2>Let's talk about your event.</h2>
           <p>
-            Whether you are organizing a full-day summit, need fresh team portraits, or have a custom project brief in mind, transmit the parameters below and I will reply promptly with availability and a tailored quote. I'm building my portfolio right now, so terms are flexible.
+            Planning a conference, a company event or a round of team portraits? Tell me what is coming up and I will get back to you with availability and a quote. I'm building my portfolio right now, so terms are flexible.
           </p>
 
           <div class="dispatch-channels-card">
-            <small>Direct Verified Channels</small>
+            <a class="phone-big" href="tel:+4798457547">
+              <span class="phone-label">Call or text</span>
+              <span class="phone-number">+47 98 45 75 47</span>
+            </a>
+            <a class="mail-line" href="mailto:oliloken@gmail.com">oliloken@gmail.com</a>
+            <small>Find me online</small>
             <div class="dispatch-links">
-              <a href="tel:+4798457547">
-                <span>[TEL]</span> Phone: +47 98 45 75 47 ↗
-              </a>
               <a href="https://www.instagram.com/oliver.w.l/" target="_blank" rel="noreferrer">
                 <span>[IG]</span> Instagram: @oliver.w.l ↗
               </a>
@@ -2359,7 +2421,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 
         <form class="dispatch-form" id="inquiryForm" onsubmit="handleInquiry(event)">
           <div class="dispatch-form-header">
-            <span>FIELD ASSIGNMENT DISPATCH ORDER</span>
+            <span>ENQUIRY FORM</span>
             <span>ROGALAND REGION</span>
           </div>
 
@@ -2399,7 +2461,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 
           <div class="form-submit-row">
             <div class="form-submit-actions">
-              <button type="submit" class="btn fill">Transmit Dispatch ↗</button>
+              <button type="submit" class="btn fill">Send enquiry ↗</button>
               <button type="button" class="btn outline" id="copyInquiryBtn" onclick="copyInquiryDetails()">Copy Brief 📋</button>
             </div>
             <p class="form-note">
@@ -2714,11 +2776,11 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
         </p>
       </div>
       <div class="fcol">
-        <strong>Dispatch Index</strong>
+        <strong>Pages</strong>
         <a href="#work">[01] Selected Work</a>
         <a href="#about">[02] Behind the Lens</a>
-        <a href="#services">[03] Assignment Ledger</a>
-        <a href="#inquiry">[04] Dispatch Brief</a>
+        <a href="#services">[03] What I do</a>
+        <a href="#inquiry">[04] Get in touch</a>
         <a href="#studio">[05] 3D Camera Lab</a>
       </div>
       <div class="fcol">
@@ -3062,6 +3124,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 
   /* If a preset photo is missing, swap in a real photo from the gallery instead of showing a blank card */
   async function resolveHero() {
+    { const b = $('#heroArchiveBtn'); if (b && all.length && !/\(\d+\)/.test(b.textContent)) b.textContent = b.textContent.replace(' ↓', ' (' + all.length + ') ↓'); }
     const ok = await Promise.all(HERO_PRESETS.map(pr => new Promise(r => {
       const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = pr.src;
     })));
@@ -3416,7 +3479,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     const date = f.date.value.trim() || 'Flexible / TBD';
     const msg = f.message.value.trim() || 'No specific notes entered.';
 
-    const text = `PHOTOGRAPHY ASSIGNMENT DISPATCH BRIEF\n` +
+    const text = `PHOTOGRAPHY ENQUIRY\n` +
       `Photographer: Oliver Løken (Stavanger, Norway)\n` +
       `=========================================\n` +
       `Client / Organisation: ${name}\n` +
