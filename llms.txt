@@ -1,0 +1,30 @@
+# Oliver Løken
+ 
+> Event and portrait photographer based in Stavanger, Norway. I photograph conferences, company events, team and executive portraits and workplace culture in Rogaland and across Norway. Highlights are delivered within 48 hours, followed by the full gallery. The site is available in Norwegian and English.
+ 
+I am building my portfolio right now, so terms are flexible and quoted per project. The quickest way to reach me is by phone or email.
+ 
+## Pages
+ 
+- [Home (Norwegian)](https://oliloken.me/): Portfolio, services, about and the enquiry form, in Norwegian.
+- [Home (English)](https://oliloken.me/en.html): The same site in English.
+ 
+## What I do
+ 
+- Conferences and company events: discreet coverage of speakers, audience and networking, with group photos when needed.
+- Team and leader portraits: relaxed portraits at your office or on location.
+- Company and workplace photography: honest pictures for websites, annual reports and recruiting.
+ 
+## Contact
+ 
+- Enquiries: use the form on the home page (fields: name or organisation, email, type of job, date and place, message), or phone or email below. In browsers that support WebMCP, the form is exposed as the tool send_photography_enquiry; the visitor reviews and presses Send.
+ 
+- Phone: +47 98 45 75 47
+- Email: oliloken@gmail.com
+- Instagram: https://www.instagram.com/oliver.w.l/
+- LinkedIn: https://www.linkedin.com/in/oliver-l%C3%B8ken/
+- GitHub: https://github.com/oliloken
+ 
+## Optional
+ 
+- [Photo index (JSON)](https://oliloken.me/photos.json): Machine-readable list of the portfolio photos, grouped by folder. 

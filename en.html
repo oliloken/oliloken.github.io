@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="ard">
 <script src="photos.js"></script>
 <style>
 :root {
@@ -2058,7 +2059,10 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 .mail-line { display: block; width: fit-content; margin: 0 0 18px; font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--ink); border-bottom: 2px solid var(--acc); }
 .mail-line:hover { color: var(--acc); }
 @media (max-width: 760px) { .process-strip { grid-template-columns: 1fr; } }
+.dispatch-form:tool-form-active { outline: 2px dashed var(--acc); outline-offset: 6px; }
+.dispatch-form button:tool-submit-active { outline: 2px dashed var(--acc); outline-offset: 3px; }
 </style>
+<link rel="ard" href="/.well-known/ard.json" />
 </head>
 <body>
 <script src="config.js"></script>
@@ -2419,7 +2423,7 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
           </div>
         </div>
 
-        <form class="dispatch-form" id="inquiryForm" onsubmit="handleInquiry(event)">
+        <form class="dispatch-form" id="inquiryForm" onsubmit="handleInquiry(event)" toolname="send_photography_enquiry" tooldescription="Send an enquiry to Oliver Løken, a photographer in Stavanger, Norway, about event, conference, portrait or workplace photography. Provide the sender name or organisation, a reply email, the kind of job, when and where, and a short description. The visitor reviews the filled form and presses Send.">
           <div class="dispatch-form-header">
             <span>ENQUIRY FORM</span>
             <span>ROGALAND REGION</span>
@@ -2428,18 +2432,18 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
           <div class="form-row">
             <div class="form-group">
               <label for="fName">[ 01 ] Client / Organisation *</label>
-              <input type="text" id="fName" name="name" required placeholder="Ola Nordmann / Company AS" />
+              <input type="text" id="fName" name="name" required toolparamdescription="Name of the person or organisation making the enquiry." placeholder="Ola Nordmann / Company AS" />
             </div>
             <div class="form-group">
               <label for="fEmail">[ 02 ] Contact Email *</label>
-              <input type="email" id="fEmail" name="email" required placeholder="ola@example.com" />
+              <input type="email" id="fEmail" name="email" autocomplete="email" required toolparamdescription="Email address where Oliver should reply." placeholder="ola@example.com" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="fType">[ 03 ] Assignment Type</label>
-              <select id="fType" name="type">
+              <select id="fType" name="type" toolparamdescription="The kind of photography job.">
                 <option value="Conference / Live Event">Live Conference / Summit</option>
                 <option value="Executive Portraits">Executive & Team Portraits</option>
                 <option value="Commercial / Culture">Commercial & Operations</option>
@@ -2448,16 +2452,16 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
             </div>
             <div class="form-group">
               <label for="fDate">[ 04 ] Date & Venue / Location</label>
-              <input type="text" id="fDate" name="date" placeholder="e.g. November in Stavanger" />
+              <input type="text" id="fDate" name="date" toolparamdescription="Date and place of the job, for example November in Stavanger. Optional." placeholder="e.g. November in Stavanger" />
             </div>
           </div>
 
           <div class="form-group">
             <label for="fMessage">[ 05 ] Scope & Schedule Brief</label>
-            <textarea id="fMessage" name="message" rows="4" placeholder="Tell me a bit about the schedule, venue, expected attendance, and what you need documented..."></textarea>
+            <textarea id="fMessage" toolparamdescription="What needs to be photographed, the schedule, expected number of attendees and any special requirements." name="message" rows="4" placeholder="Tell me a bit about the schedule, venue, expected attendance, and what you need documented..."></textarea>
           </div>
 
-          <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" toolparamdescription="Leave empty. This is a spam trap and not meant to be filled in." /></label></div>
 
           <div class="form-submit-row">
             <div class="form-submit-actions">
@@ -3430,10 +3434,10 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
   const formStart = Date.now();
   { const n = document.querySelector('#inquiryForm .form-note'); if (window.FORM_ENDPOINT && n) n.textContent = FORM_MSG.note; }
 
-  async function sendInquiry(f) {
+  async function sendInquiry(f, byAgent) {
     const btn = f.querySelector('button[type="submit"]'), st = $('#formStatus');
-    if (f.website && f.website.value) return;                       /* spam trap: real people never fill it */
-    if (Date.now() - formStart < 3000) { st.textContent = FORM_MSG.slow; return; }
+    if (!byAgent && f.website && f.website.value) return 'Not sent.';   /* spam trap: real people never fill it */
+    if (!byAgent && Date.now() - formStart < 3000) { st.textContent = FORM_MSG.slow; return FORM_MSG.slow; }
     btn.disabled = true; st.textContent = FORM_MSG.sending;
     const data = new URLSearchParams({
       name: f.name.value.trim(), email: f.email.value.trim(), type: f.type.value,
@@ -3441,16 +3445,22 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     });
     try {
       await fetch(window.FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data });
-      st.textContent = FORM_MSG.sent; f.reset();
+      st.textContent = FORM_MSG.sent; f.reset(); return FORM_MSG.sent;
     } catch (err) {
-      st.textContent = FORM_MSG.failed;
+      st.textContent = FORM_MSG.failed; return FORM_MSG.failed;
     } finally { btn.disabled = false; }
   }
 
   window.handleInquiry = function(e) {
     e.preventDefault();
     const f = e.target;
-    if (window.FORM_ENDPOINT) { sendInquiry(f); return; }
+    const byAgent = !!e.agentInvoked;   /* set by the browser when an AI agent triggered the form */
+    if (window.FORM_ENDPOINT) {
+      const result = sendInquiry(f, byAgent);
+      if (byAgent && typeof e.respondWith === 'function') e.respondWith(result);
+      return;
+    }
+    if (byAgent && typeof e.respondWith === 'function') e.respondWith(Promise.resolve('Opened an email draft. The visitor must press send in their email app.'));
     const name = encodeURIComponent(f.name.value.trim());
     const email = encodeURIComponent(f.email.value.trim());
     const type = encodeURIComponent(f.type.value);

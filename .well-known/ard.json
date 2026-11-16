@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "@context": "https://agenticresourcediscovery.org/context/v1",
+      "identifier": "urn:air:oliloken.me:portfolio:photos",
+      "displayName": "Oliver Løken portfolio photo index",
+      "type": "application/json",
+      "url": "https://oliloken.me/photos.json",
+      "description": "A machine-readable list of the photographs in Oliver Løken's portfolio: event, conference, portrait and commercial photography from Stavanger, Norway, grouped by folder.",
+      "tags": ["photography", "portfolio", "event photography", "portraits", "stavanger", "norway"],
+      "representativeQueries": [
+        "show example event photography from Stavanger",
+        "portrait and conference photographer portfolio in Norway",
+        "list the photos in a Stavanger photographer's portfolio"
+      ]
+    }
+  ]
+}
