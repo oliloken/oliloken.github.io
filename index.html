@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="ard">
 <script src="photos.js"></script>
 <style>
 :root {
@@ -2064,6 +2063,9 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
 .dispatch-form:tool-form-active { outline: 2px dashed var(--acc); outline-offset: 6px; }
 .dispatch-form button:tool-submit-active { outline: 2px dashed var(--acc); outline-offset: 3px; }
 </style>
+<!-- WebMCP origin trial: register at https://developer.chrome.com/origintrials, then replace PASTE_YOUR_TOKEN_HERE
+     with your token and remove the comment markers. Use the SAME token on every page. -->
+<meta http-equiv="origin-trial" content="A9U46S5KnaEWpk+I1gPtv/GwLxN7g2DjZZet6NaUdil66pduj11yN/Ui9a7mnM1G1tZiaGNsXPzZ8NHuM0zeyAgAAAByeyJvcmlnaW4iOiJodHRwczovL29saWxva2VuLm1lOjQ0MyIsImZlYXR1cmUiOiJXZWJNQ1AiLCJleHBpcnkiOjE4MDYzNjQ4MDAsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"> 
 <link rel="ard" href="/.well-known/ard.json" />
 </head>
 <body>
@@ -3434,6 +3436,13 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     note: 'Meldingen din går til innboksen min og et privat Google-regneark, og brukes bare til å svare deg.'
   };
   const formStart = Date.now();
+  let agentActive = false;
+  try {
+    if (document.modelContext) {
+      document.modelContext.addEventListener('toolactivated', () => { agentActive = true; });
+      document.modelContext.addEventListener('toolcancel', () => { agentActive = false; });
+    }
+  } catch (err) {}
   { const n = document.querySelector('#inquiryForm .form-note'); if (window.FORM_ENDPOINT && n) n.textContent = FORM_MSG.note; }
 
   async function sendInquiry(f, byAgent) {
@@ -3447,7 +3456,9 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
     });
     try {
       await fetch(window.FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data });
-      st.textContent = FORM_MSG.sent; f.reset(); return FORM_MSG.sent;
+      st.textContent = FORM_MSG.sent;
+      if (byAgent) setTimeout(() => f.reset(), 2500); else f.reset();   /* reset() cancels a running agent tool, so wait until it has its answer */
+      return FORM_MSG.sent;
     } catch (err) {
       st.textContent = FORM_MSG.failed; return FORM_MSG.failed;
     } finally { btn.disabled = false; }
@@ -3456,13 +3467,15 @@ body.zoomed .h-tr { top: auto; bottom: 22px; right: auto; left: 50%; translate: 
   window.handleInquiry = function(e) {
     e.preventDefault();
     const f = e.target;
-    const byAgent = !!e.agentInvoked;   /* set by the browser when an AI agent triggered the form */
+    const byAgent = !!e.agentInvoked || agentActive;   /* the browser marks submits that finish an agent's tool call */
+    const answer = (p) => { if (typeof e.respondWith === 'function') { try { e.respondWith(p); } catch (err) {} } };
     if (window.FORM_ENDPOINT) {
-      const result = sendInquiry(f, byAgent);
-      if (byAgent && typeof e.respondWith === 'function') e.respondWith(result);
+      answer(sendInquiry(f, byAgent));
+      agentActive = false;
       return;
     }
-    if (byAgent && typeof e.respondWith === 'function') e.respondWith(Promise.resolve('Opened an email draft. The visitor must press send in their email app.'));
+    answer(Promise.resolve('Opened an email draft. The visitor must press send in their email app.'));
+    agentActive = false;
     const name = encodeURIComponent(f.name.value.trim());
     const email = encodeURIComponent(f.email.value.trim());
     const type = encodeURIComponent(f.type.value);
